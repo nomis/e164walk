@@ -60,7 +60,8 @@ def walk(zone, arpa, verbose=False, timeout=False):
 				print("NXDOMAIN", file=sys.stderr)
 		except dns.exception.Timeout:
 			if timeout:
-				print("".join(reversed(number)) + " Timeout", file=sys.stderr)
+				if not verbose:
+					print("".join(reversed(number)) + " Timeout", file=sys.stderr)
 				sys.exit(1)
 			if verbose:
 				print("Timeout", file=sys.stderr)

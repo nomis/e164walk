@@ -44,10 +44,6 @@ def walk(zone, arpa, verbose=False, timeout=False):
 
 			answers = res.query(".".join(number + arpa), "NAPTR")
 
-#			if len(number) < 15:
-#				# Handle answers for PTRs not at correct host length as NoAnswer
-#				raise dns.resolver.NoAnswer
-
 			if verbose:
 				count = len(answers)
 				print("{0} NAPTR RR{1}".format(count, "" if count == 1 else "s"), file=sys.stderr)

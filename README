@@ -1,0 +1,31 @@
+e164dnswalk:
+	Walks e164.arpa tree for a given phone number prefix
+	
+	Note:
+		Some authoritative DNS servers such as PowerDNS do not implement
+		RFC1035 correctly: http://wiki.powerdns.com/trac/ticket/127
+		This has the side effect of preventing DNS walking from working.
+	
+	Warning:
+		If you're thinking of modifying a DNS server to replace NOERROR
+		with NXDOMAIN for e164.arpa zones, please don't as this isn't
+		valid behaviour.
+		[ This bogus behaviour would completely prevent walking. ]
+		
+		You can however replace NXDOMAIN with NOERROR. There's no
+		requirement to actually have a terminal RR at or below the
+		name being queried - NXDOMAIN just asserts that there isn't
+		one. Doing this for non-e164.arpa zones would give no benefit.
+		[ This technically valid behaviour would make walking the zone
+		impractical. It'd be mislead into thinking all possible numbers
+		exist. ]
+	
+	Observations:
+		e164.arpa can be trivially walked, although if there are
+		wildcard records in there the results will be a bit odd.
+		
+		e164.org's nameservers are all returning NOERROR for number
+		prefixes that don't exist. This is valid and means that the only
+		remaining way to enumerate all possible numbers is to query for
+		all possible numbers (which is impractical unless you look at
+		the individual numbering plans of every country).

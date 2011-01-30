@@ -32,7 +32,7 @@ res = dns.resolver.Resolver()
 def to_number(number):
 	return "".join(list(reversed(number)))
 
-def walk(zone, arpa, verbose=False):
+def walk(zone, arpa, verbose=False, timeout=False):
 	global res
 	numbers = {}
 	for decimal in decimals:
@@ -58,10 +58,16 @@ def walk(zone, arpa, verbose=False):
 				print("NoAnswer", file=sys.stderr)
 
 			if len(number) < 15:
-				numbers.update(walk(number, arpa, verbose))
+				numbers.update(walk(number, arpa, verbose, timeout))
 		except dns.resolver.NXDOMAIN:
 			if verbose:
 				print("NXDOMAIN", file=sys.stderr)
+		except dns.exception.Timeout:
+			if timeout:
+				print("".join(reversed(number)) + " Timeout", file=sys.stderr)
+				sys.exit(1)
+			if verbose:
+				print("Timeout", file=sys.stderr)
 	return numbers
 
 def from_prefix(parser, args):
@@ -74,6 +80,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Walks e164.arpa tree for a given phone number prefix')
 	parser.add_argument('-p', '--parent', default='e164.arpa', help='Use specified parent')
 	parser.add_argument('-r', '--resolver', action='append', help='Use specified resolver(s)')
+	parser.add_argument('-t', '--timeout', action='store_true', help='Abort on timeout')
 	parser.add_argument('-v', '--verbose', action='store_true', help='Outputs every NAPTR query performed to stderr')
 	parser.add_argument('prefix', help='Phone number prefix')
 	args = parser.parse_args()
@@ -82,7 +89,7 @@ if __name__ == "__main__":
 		res = dns.resolver.Resolver(configure=False)
 		res.nameservers = args.resolver
 
-	numbers = walk(from_prefix(parser, args), [args.parent + "."], args.verbose)
+	numbers = walk(from_prefix(parser, args), [args.parent + "."], args.verbose, args.timeout)
 	for number in sorted(numbers.keys()):
 		for record in sorted(numbers[number]):
 			print(number, record)

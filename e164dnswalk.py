@@ -65,7 +65,7 @@ def walk(zone, arpa, verbose=False):
 	return numbers
 
 def from_prefix(parser, args):
-	if not re.match("^[0-9]+$", args.prefix):
+	if not re.match("^[0-9]*$", args.prefix):
 		parser.error("Invalid phone number")
 
 	return list(reversed(list(args.prefix)))

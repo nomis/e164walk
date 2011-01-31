@@ -5,6 +5,14 @@ e164dnswalk:
 		Some authoritative DNS servers such as PowerDNS do not implement
 		RFC1035 correctly: http://wiki.powerdns.com/trac/ticket/127
 		This has the side effect of preventing DNS walking from working.
+
+e164dnshide:
+	Hides empty terminals in an e164.arpa zone (preventing walking)
+	
+	Prevents e164dnswalk from working (unless the secret used to create the
+	wildcards is known because then more information that could be used to
+	infer NXDOMAIN is available) by causing queries that would have returned
+	NXDOMAIN to return NOERROR using some extra records.
 	
 	Warning:
 		If you're thinking of modifying a DNS server to replace NOERROR
@@ -29,6 +37,10 @@ e164dnswalk:
 		remaining way to enumerate all possible numbers is to query for
 		all possible numbers (which is impractical unless you look at
 		the individual numbering plans of every country).
+	
+	Note:
+		If the zone is DNSSEC signed then the use of offline signed
+		NSEC3 allows it to be walked even if the NOERROR trick is used.
 
 Credits:
 	Roland Dobbins

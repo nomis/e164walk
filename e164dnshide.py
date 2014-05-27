@@ -34,8 +34,6 @@ def scan(file):
 	return lines
 
 def push(host, lines):
-	global rrs
-
 	# create secret wildcard RR (being able to query for
 	# this exact MX record makes it possible to infer NXDOMAIN
 	# and allow zone walking)

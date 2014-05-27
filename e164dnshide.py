@@ -34,7 +34,7 @@ def scan(file):
 	return lines
 
 def push(host, lines):
-	global rrs, secret
+	global rrs
 
 	# create secret wildcard RR (being able to query for
 	# this exact MX record makes it possible to infer NXDOMAIN
@@ -45,7 +45,6 @@ def push(host, lines):
 		rrs[rr] = True
 
 def hide(line):
-	global rrs
 	lines = []
 	match = data.match(line)
 	if match is not None:

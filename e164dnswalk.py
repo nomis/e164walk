@@ -32,7 +32,6 @@ def to_number(number):
 	return "".join(list(reversed(number)))
 
 def walk(zone, arpa, verbose=False, timeout=False):
-	global res
 	numbers = {}
 	for decimal in decimals:
 		try:
